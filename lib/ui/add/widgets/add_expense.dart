@@ -16,7 +16,8 @@ class Add extends StatefulWidget {
 class _AddState extends State<Add> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(top: false,
+    return SafeArea(
+      top: false,
       child: Scaffold(
         appBar: AppBar(
           title: Text(

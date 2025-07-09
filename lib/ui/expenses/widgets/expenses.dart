@@ -109,7 +109,8 @@ class _ExpensesState extends State<Expenses> {
                     const SizedBox(height: 16),
                     if (categorias.isNotEmpty)
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.only(
+                            bottom: 16, left: 16, right: 16),
                         child: DropdownButton<String>(
                           value: viewModel.categoriaSelecionada,
                           hint: Text('Filtrar por categoria',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poupix/app_state/app_state.dart';
+import 'package:poupix/ui/components/delete_account.dart';
 import 'package:poupix/ui/core/themes/colors.dart';
 import 'package:poupix/ui/core/themes/dimens.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
@@ -118,7 +119,11 @@ class _ManageAccountState extends State<ManageAccount> {
                   ),
                   elevation: WidgetStateProperty.all(2),
                 ),
-                child: isLoading ? CircularProgressIndicator(color: Colors.white,) : Text('Salvar'),
+                child: isLoading
+                    ? CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : Text('Salvar'),
               ),
             ),
             // Botões
@@ -128,7 +133,20 @@ class _ManageAccountState extends State<ManageAccount> {
                 children: [
                   Expanded(
                     child: FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                                insetPadding: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: DeleteAccount());
+                          },
+                        );
+                      },
                       style: ButtonStyle(
                         backgroundColor:
                             WidgetStateProperty.all<Color>(AppColors.red1),

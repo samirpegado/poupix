@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:poupix/domain/models/categorias_model.dart';
 import 'package:poupix/domain/models/despesas_mes.dart';
 import 'package:poupix/domain/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,12 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppState extends ChangeNotifier {
   UserModel? _usuario;
   DespesasMesModel? _despesasMes;
+  List<Categorias>? _categorias;
   bool _overrideCache = true;
+  bool _overrideCategorias = true;
   DateTime? _dataSelecionada;
 
   UserModel? get usuario => _usuario;
   DespesasMesModel? get despesasMes => _despesasMes;
+  List<Categorias>? get categorias => _categorias;
   bool get overrideCache => _overrideCache;
+  bool get overrideCategorias => _overrideCategorias;
   DateTime? get dataSelecionada => _dataSelecionada;
 
   Future<void> carregar() async {
@@ -21,6 +26,7 @@ class AppState extends ChangeNotifier {
     final usuarioJson = prefs.getString('usuario');
     final despesasJson = prefs.getString('despesasMes');
     final overrideCache = prefs.getBool('overrideCache');
+    final overrideCategorias = prefs.getBool('overrideCategorias');
     final dataSalva = prefs.getString('dataSelecionada');
 
     if (usuarioJson != null) {
@@ -49,8 +55,19 @@ class AppState extends ChangeNotifier {
     } catch (e) {
       debugPrint('Erro ao carregar despesasMes do cache: $e');
     }
+    final categoriasJson = prefs.getString('categorias');
+
+    if (categoriasJson != null) {
+      try {
+        _categorias = Categorias.listFromJson(categoriasJson);
+      } catch (e) {
+        debugPrint('Erro ao carregar categorias do cache: $e');
+        _categorias = null;
+      }
+    }
 
     _overrideCache = overrideCache ?? true;
+    _overrideCategorias = overrideCategorias ?? true;
     notifyListeners();
   }
 
@@ -77,12 +94,26 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> salvarCategorias(List<Categorias> categorias) async {
+    _categorias = categorias;
+    final prefs = await SharedPreferences.getInstance();
+    final categoriasJson = jsonEncode(Categorias.listToMap(categorias));
+    await prefs.setString('categorias', categoriasJson);
+    await prefs.setBool('overrideCategorias', false);
+    _overrideCategorias = false;
+    notifyListeners();
+  }
+
   Future<void> limparCacheDespesas() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('despesasMes');
     await prefs.remove('overrideCache');
+    await prefs.remove('categorias');
+    await prefs.remove('overrideCategorias');
     _despesasMes = null;
     _overrideCache = true;
+    _overrideCategorias = true;
+    _categorias = null;
     notifyListeners();
   }
 
@@ -92,19 +123,22 @@ class AppState extends ChangeNotifier {
     _usuario = null;
     _despesasMes = null;
     _overrideCache = true;
+    _overrideCategorias = true;
+    _categorias = null;
     notifyListeners();
   }
 
-  Future<void> atualizarUsuario({required String nome, required String celular}) async {
-      if (_usuario == null) return;
+  Future<void> atualizarUsuario(
+      {required String nome, required String celular}) async {
+    if (_usuario == null) return;
 
-  _usuario = _usuario!.copyWith(
-    nome: nome,
-    celular: celular,
-  );
+    _usuario = _usuario!.copyWith(
+      nome: nome,
+      celular: celular,
+    );
 
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('usuario', jsonEncode(_usuario!.toJson()));
-  notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('usuario', jsonEncode(_usuario!.toJson()));
+    notifyListeners();
   }
 }

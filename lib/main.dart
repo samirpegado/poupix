@@ -12,7 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Carrega as variáveis de ambiente em assets/.env
-  await dotenv.load(fileName: 'assets/.env');
+  await dotenv.load();
 
   // Inicializa o Supabase
   await Supabase.initialize(
@@ -49,18 +49,17 @@ class MyApp extends StatelessWidget {
     final authRepository = Provider.of<AuthRepository>(context, listen: false);
     final appState = Provider.of<AppState>(context, listen: false);
 
-
     return MaterialApp.router(
       locale: const Locale('pt', 'BR'),
-  supportedLocales: const [
-    Locale('pt', 'BR'),
-    Locale('en', 'US'),
-  ],
-  localizationsDelegates: const [
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-  ],
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+        Locale('en', 'US'),
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       title: 'App',
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.system,

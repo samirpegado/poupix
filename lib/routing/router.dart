@@ -117,7 +117,7 @@ GoRouter router(AuthRepository authRepository, AppState appState) => GoRouter(
               return null;
             },
             pageBuilder: (context, state) {
-              final viewModel = CategoriesViewModel();
+              final viewModel = CategoriesViewModel(appState: appState);
               return buildPageWithTransition(
                 state: state,
                 child: Categories(viewModel: viewModel),

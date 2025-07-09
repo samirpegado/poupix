@@ -9,6 +9,7 @@ import 'package:poupix/ui/core/themes/dimens.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
 import 'package:poupix/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:poupix/ui/profile/widgets/profile_option.dart';
+import 'package:poupix/utils/functions.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -101,6 +102,7 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(height: 16),
             ProfileOption(
+              action: () => selecionarImagem(context),
               icone: Icon(
                 Icons.image,
                 color: AppColors.secondaryColor,

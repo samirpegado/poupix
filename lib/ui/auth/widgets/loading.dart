@@ -21,12 +21,14 @@ class _LoadingState extends State<Loading> {
   }
 
   Future<void> _verificarUsuario() async {
-    Future.delayed(Duration(seconds: 2));
-    await widget.viewModel.carregarUsuario();
+    await Future.delayed(Duration(seconds: 2)); // agora sim tá aguardando
 
-    final status = widget.viewModel.appState.usuario?.status ?? false;
+    await widget.viewModel
+        .init(); // carrega SharedPreferences, usuario e categorias
 
     if (!mounted) return;
+
+    final status = widget.viewModel.appState.usuario?.status ?? false;
 
     if (status) {
       context.go('/home');
@@ -47,15 +49,14 @@ class _LoadingState extends State<Loading> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
               InkWell(
                 onTap: () async {
-                  await context.read<AuthRepository>().logout();               
+                  await context.read<AuthRepository>().logout();
                   context.go('/login');
                 },
-
-                child: Text('Carregando...'),
+                child: const Text('Carregando...'),
               ),
             ],
           ),

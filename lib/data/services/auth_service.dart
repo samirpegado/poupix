@@ -43,6 +43,50 @@ class AuthService {
     }
   }
 
+  Future<ResponseModel> deleteAccount(
+      {required String userId,
+      required String email,
+      required String password}) async {
+    final serverUrl = dotenv.env['SUPABASE_URL']!;
+    final anonkey = dotenv.env['SUPABASE_ANON_KEY']!;
+    final headers = {
+      'apikey': anonkey,
+      'Content-Type': 'application/json',
+    };
+
+    final url = Uri.parse(
+      '$serverUrl/functions/v1/delete-account',
+    );
+
+    final body = json.encode({
+      "user_id": userId,
+      "email": email,
+      "password": password,
+    });
+
+    try {
+      final response = await http.post(url, body: body, headers: headers);
+      final data = json.decode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        return ResponseModel(
+          success: true,
+          message: data['message'] ?? 'Conta excluída com sucesso.',
+        );
+      } else {
+        return ResponseModel(
+          success: false,
+          message: data['message'] ?? 'Erro ao excluir conta.',
+        );
+      }
+    } catch (e) {
+      return ResponseModel(
+        success: false,
+        message: 'Erro de conexão: $e',
+      );
+    }
+  }
+
   Future<ResponseModel> recoveryPasswordMobile({required String email}) async {
     final serverUrl = dotenv.env['SUPABASE_URL']!;
     final anonkey = dotenv.env['SUPABASE_ANON_KEY']!;
