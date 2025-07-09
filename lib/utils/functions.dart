@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:poupix/data/repositories/storage_repository.dart';
 import 'package:poupix/domain/models/despesa.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ Color? getColor(int index) {
   return HSVColor.fromAHSV(1.0, hue.toDouble(), 1.0, 0.9).toColor();
 }
 
-Future<void> selecionarImagem(BuildContext context) async {
+Future<void> selecionarImagem(BuildContext context, String userId) async {
   if (kIsWeb) {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
@@ -46,7 +47,6 @@ Future<void> selecionarImagem(BuildContext context) async {
       final nome = result.files.single.name;
 
       debugPrint('Imagem selecionada na web: $nome (${bytes.length} bytes)');
-      // Exemplo: fazer upload com `bytes`
     } else {
       debugPrint('Nenhuma imagem selecionada na web');
     }
@@ -66,7 +66,7 @@ Future<void> selecionarImagem(BuildContext context) async {
                 title: const Text('Câmera'),
                 onTap: () async {
                   Navigator.of(context).pop();
-                  await _pickImageMobile(ImageSource.camera);
+                  await _pickImageMobile(ImageSource.camera, userId);
                 },
               ),
               ListTile(
@@ -74,7 +74,7 @@ Future<void> selecionarImagem(BuildContext context) async {
                 title: const Text('Galeria'),
                 onTap: () async {
                   Navigator.of(context).pop();
-                  await _pickImageMobile(ImageSource.gallery);
+                  await _pickImageMobile(ImageSource.gallery, userId);
                 },
               ),
             ],
@@ -85,7 +85,7 @@ Future<void> selecionarImagem(BuildContext context) async {
   }
 }
 
-Future<void> _pickImageMobile(ImageSource source) async {
+Future<void> _pickImageMobile(ImageSource source, String userId) async {
   final picker = ImagePicker();
   final XFile? imagem = await picker.pickImage(source: source);
 
@@ -93,6 +93,8 @@ Future<void> _pickImageMobile(ImageSource source) async {
     debugPrint('Imagem selecionada no mobile: ${imagem.path}');
     // Exemplo: upload ou salvar localmente
     // final File file = File(imagem.path);
+    final storageRepository = StorageRepository();
+    await storageRepository.uploadProfilePic(userId: userId, imagem: imagem);
   } else {
     debugPrint('Nenhuma imagem selecionada no mobile');
   }

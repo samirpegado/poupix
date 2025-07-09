@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:poupix/app_state/app_state.dart';
 import 'package:poupix/ui/categories/view_models/categories_viewmodel.dart';
+import 'package:poupix/ui/categories/widgets/categori_delete_buton.dart';
+import 'package:poupix/ui/components/category_add.dart';
+import 'package:poupix/ui/components/category_edit.dart';
 import 'package:poupix/ui/components/navbar.dart';
 import 'package:poupix/ui/core/themes/colors.dart';
 import 'package:poupix/ui/core/themes/dimens.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
 import 'package:poupix/ui/core/ui/input_decorations.dart';
 import 'package:poupix/utils/functions.dart' show getColor;
+import 'package:provider/provider.dart';
 
 class Categories extends StatefulWidget {
   const Categories({super.key, required this.viewModel});
@@ -50,7 +55,19 @@ class _CategoriesState extends State<Categories> {
                 ),
                 SizedBox(width: 16),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Dialog(
+                            insetPadding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: CategoryAdd());
+                      },
+                    );
+                  },
                   icon: Icon(
                     Icons.add_rounded,
                     color: Colors.white,
@@ -73,7 +90,8 @@ class _CategoriesState extends State<Categories> {
                 valueListenable: _buscaController,
                 builder: (context, _, __) {
                   final todasCategorias =
-                      widget.viewModel.appState.categorias ?? [];
+                      context.watch<AppState>().categorias ?? [];
+
                   final query = _buscaController.text.toLowerCase();
                   final categoriasFiltradas = todasCategorias.where((cat) {
                     return cat.titulo.toLowerCase().contains(query);
@@ -84,7 +102,7 @@ class _CategoriesState extends State<Categories> {
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final categoria = categoriasFiltradas[index];
-                      final cor = getColor(index);
+                      final cor = getColor(categoria.id);
 
                       return Row(
                         children: [
@@ -115,7 +133,22 @@ class _CategoriesState extends State<Categories> {
                               userIdAppState.isNotEmpty)
                             Row(children: [
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Dialog(
+                                          insetPadding: EdgeInsets.zero,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          ),
+                                          child: EditarCategoria(
+                                            categoria: categoria,
+                                          ));
+                                    },
+                                  );
+                                },
                                 icon: const Icon(Icons.edit_rounded,
                                     color: Colors.grey),
                                 style: ButtonStyle(
@@ -128,17 +161,9 @@ class _CategoriesState extends State<Categories> {
                               ),
                               const SizedBox(width: 6),
                               // Botão excluir
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.delete_forever,
-                                    color: Colors.red),
-                                style: ButtonStyle(
-                                  shape: WidgetStateProperty.all(
-                                    CircleBorder(
-                                        side: BorderSide(color: Colors.red)),
-                                  ),
-                                ),
-                              ),
+                              CategoriaDeleteButton(
+                                  categoria: categoria,
+                                  viewModel: widget.viewModel)
                             ]),
                         ],
                       );

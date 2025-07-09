@@ -21,8 +21,6 @@ class _LoadingState extends State<Loading> {
   }
 
   Future<void> _verificarUsuario() async {
-    await Future.delayed(Duration(seconds: 2)); // agora sim tá aguardando
-
     await widget.viewModel
         .init(); // carrega SharedPreferences, usuario e categorias
 

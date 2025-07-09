@@ -102,7 +102,7 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(height: 16),
             ProfileOption(
-              action: () => selecionarImagem(context),
+              action: () => selecionarImagem(context, usuario?.id ?? ''),
               icone: Icon(
                 Icons.image,
                 color: AppColors.secondaryColor,

@@ -4,11 +4,13 @@ import 'package:poupix/data/repositories/categorias_repository.dart';
 import 'package:poupix/domain/models/categorias_model.dart';
 import 'package:poupix/utils/command.dart';
 import 'package:poupix/utils/result.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CategoriesViewModel {
   CategoriesViewModel({required this.appState}) {
     fetchCategorias = Command0<List<Categorias>>(() => _buscarCategorias());
-    fetchCategorias.execute(); // Executa na inicialização
+    deleteCategoria = Command1<String, int>((id) => _removerCategoria(id));
+    fetchCategorias.execute();
   }
 
   final AppState appState;
@@ -16,6 +18,7 @@ class CategoriesViewModel {
 
   final categoriasRepository = CategoriasRepository();
   late final Command0<List<Categorias>> fetchCategorias;
+  late final Command1<String, int> deleteCategoria;
 
   /// Carrega categorias, com opção de forçar atualização (ignorar cache)
   Future<Result<List<Categorias>>> _buscarCategorias(
@@ -44,9 +47,17 @@ class CategoriesViewModel {
     }
   }
 
-  /// Método público para forçar recarregar categorias manualmente
-  Future<void> recarregarCategorias() async {
-    await _buscarCategorias(force: true);
-    fetchCategorias.execute(); // Reexecuta para atualizar listeners
+  Future<Result<String>> _removerCategoria(int categoriaId) async {
+    try {
+      await Supabase.instance.client
+          .from('categorias')
+          .delete()
+          .eq('id', categoriaId);
+      await _buscarCategorias(force: true);
+
+      return Result.ok('Categoria removida com sucesso');
+    } catch (e) {
+      return Result.error(Exception('Erro ao remover categorias'));
+    }
   }
 }
