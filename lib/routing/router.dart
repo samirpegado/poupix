@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poupix/app_state/app_state.dart';
 import 'package:poupix/data/repositories/auth_repository.dart';
+import 'package:poupix/data/repositories/storage_repository.dart';
 import 'package:poupix/data/services/auth_service.dart';
 import 'package:poupix/ui/add/view_models/add_viewmodel.dart';
 import 'package:poupix/ui/add/widgets/add_expense.dart';
@@ -131,7 +132,9 @@ GoRouter router(AuthRepository authRepository, AppState appState) => GoRouter(
               return null;
             },
             pageBuilder: (context, state) {
-              final viewModel = ProfileViewModel();
+              final storageRepository = StorageRepository();
+              final viewModel = ProfileViewModel(
+                  storageRepository: storageRepository, appState: context.read<AppState>());
               return buildPageWithTransition(
                 state: state,
                 child: Profile(viewModel: viewModel),

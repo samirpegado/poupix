@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:poupix/domain/models/categorias_model.dart';
 import 'package:poupix/domain/models/despesas_mes.dart';
 import 'package:poupix/domain/models/user_model.dart';
@@ -13,6 +14,7 @@ class AppState extends ChangeNotifier {
   bool _overrideCache = true;
   bool _overrideCategorias = true;
   DateTime? _dataSelecionada;
+  XFile? _profilePic;
 
   UserModel? get usuario => _usuario;
   DespesasMesModel? get despesasMes => _despesasMes;
@@ -20,6 +22,7 @@ class AppState extends ChangeNotifier {
   bool get overrideCache => _overrideCache;
   bool get overrideCategorias => _overrideCategorias;
   DateTime? get dataSelecionada => _dataSelecionada;
+  XFile? get profilePic => _profilePic;
 
   Future<void> carregar() async {
     final prefs = await SharedPreferences.getInstance();
@@ -126,6 +129,15 @@ class AppState extends ChangeNotifier {
     _overrideCategorias = true;
     _categorias = null;
     notifyListeners();
+  }
+
+  Future<void> atualizarProfilePicUrl(String? novaUrl) async {
+    if (_usuario != null && novaUrl != null) {
+      _usuario = _usuario!.copyWith(profilePic: novaUrl);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('usuario', jsonEncode(_usuario!.toJson()));
+      notifyListeners();
+    }
   }
 
   Future<void> atualizarUsuario(

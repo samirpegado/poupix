@@ -12,7 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Carrega as variáveis de ambiente em assets/.env
-  await dotenv.load();
+  await dotenv.load(fileName: 'assets/.env');
 
   // Inicializa o Supabase
   await Supabase.initialize(

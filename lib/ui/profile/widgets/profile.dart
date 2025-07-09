@@ -9,7 +9,6 @@ import 'package:poupix/ui/core/themes/dimens.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
 import 'package:poupix/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:poupix/ui/profile/widgets/profile_option.dart';
-import 'package:poupix/utils/functions.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -23,6 +22,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppState>();
     final usuario = context.watch<AppState>().usuario;
     return SafeArea(
       top: false,
@@ -51,12 +51,12 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(height: 16),
             Text(
-              usuario?.nome ?? 'userName',
+              appState.usuario?.nome ?? 'userName',
               style: AppTheme.lightTheme.textTheme.bodyMedium,
             ),
             SizedBox(height: 8),
             Text(
-              usuario?.email ?? 'email@exemple.com',
+              appState.usuario?.email ?? 'email@exemple.com',
               style: AppTheme.lightTheme.textTheme.bodySmall,
             ),
             SizedBox(height: 20),
@@ -102,7 +102,9 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(height: 16),
             ProfileOption(
-              action: () => selecionarImagem(context, usuario?.id ?? ''),
+              action: () async {
+                widget.viewModel.alterarFoto(context);
+              },
               icone: Icon(
                 Icons.image,
                 color: AppColors.secondaryColor,

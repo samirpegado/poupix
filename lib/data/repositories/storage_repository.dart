@@ -10,7 +10,7 @@ class StorageRepository {
     required XFile imagem,
   }) async {
     final fileName = 'profile_$userId.jpg';
-    final bucket = _client.storage.from('profile');
+    final bucket = _client.storage.from('profile');   
 
     // 1. Upload da imagem
     final bytes = await imagem.readAsBytes();
