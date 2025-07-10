@@ -3,7 +3,7 @@
 **Poupix** is a simple and modern personal expense tracker built with Flutter and Supabase.  
 It follows the MVVM architecture pattern, uses the command/result pattern, and implements local caching via SharedPreferences for performance.
 
-![Poupix Logo](assets/poupix.png)
+![Poupix Thumb](poupix_thumb.jpeg)
 
 ## Features
 
