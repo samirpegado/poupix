@@ -38,103 +38,105 @@ class _ProfileState extends State<Profile> {
         ),
         body: Padding(
           padding: Dimens.of(context).edgeInsetsScreen,
-          child: Column(children: [
-            ClipOval(
-              child: Image.network(
-                appState.usuario?.profilePic ??
-                    'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/contas-bq58qy/assets/b0smeq7opmcb/emptyUser_(1).png',
-                fit: BoxFit.cover,
-                width: 100,
-                height: 100,
+          child: SingleChildScrollView(
+            child: Column(children: [
+              ClipOval(
+                child: Image.network(
+                  appState.usuario?.profilePic ??
+                      'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/contas-bq58qy/assets/b0smeq7opmcb/emptyUser_(1).png',
+                  fit: BoxFit.cover,
+                  width: 100,
+                  height: 100,
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              appState.usuario?.nome ?? 'userName',
-              style: AppTheme.lightTheme.textTheme.bodyMedium,
-            ),
-            SizedBox(height: 8),
-            Text(
-              appState.usuario?.email ?? 'email@exemple.com',
-              style: AppTheme.lightTheme.textTheme.bodySmall,
-            ),
-            SizedBox(height: 20),
-            ProfileOption(
-              action: () => context.push('/donate'),
-              icone: Icon(
-                Icons.coffee,
-                color: AppColors.secondaryText,
-                size: 24,
+              SizedBox(height: 16),
+              Text(
+                appState.usuario?.nome ?? 'userName',
+                style: AppTheme.lightTheme.textTheme.bodyMedium,
               ),
-              label: 'Buy me a coffee',
-            ),
-            SizedBox(height: 16),
-            ProfileOption(
-              action: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                        insetPadding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: ManageAccount());
-                  },
-                );
-              },
-              icone: Icon(
-                Icons.edit_square,
-                color: AppColors.secondaryColor,
-                size: 24,
+              SizedBox(height: 8),
+              Text(
+                appState.usuario?.email ?? 'email@exemple.com',
+                style: AppTheme.lightTheme.textTheme.bodySmall,
               ),
-              label: 'Gerir conta',
-            ),
-            SizedBox(height: 16),
-            ProfileOption(action: ()=> context.push('/change-password'),
-              icone: Icon(
-                Icons.password_outlined,
-                color: AppColors.secondaryColor,
-                size: 24,
+              SizedBox(height: 20),
+              ProfileOption(
+                action: () => context.push('/donate'),
+                icone: Icon(
+                  Icons.coffee,
+                  color: AppColors.secondaryText,
+                  size: 24,
+                ),
+                label: 'Buy me a coffee',
               ),
-              label: 'Alterar senha',
-            ),
-            SizedBox(height: 16),
-             ProfileOption(action: ()=> context.push('/policy'),
-              icone: Icon(
-                Icons.document_scanner,
-                color: AppColors.secondaryColor,
-                size: 24,
+              SizedBox(height: 16),
+              ProfileOption(
+                action: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                          insetPadding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: ManageAccount());
+                    },
+                  );
+                },
+                icone: Icon(
+                  Icons.edit_square,
+                  color: AppColors.secondaryColor,
+                  size: 24,
+                ),
+                label: 'Gerir conta',
               ),
-              label: 'Termos de uso',
-            ),
-            SizedBox(height: 16),
-            ProfileOption(
-              action: () async {
-                widget.viewModel.alterarFoto(context);
-              },
-              icone: Icon(
-                Icons.image,
-                color: AppColors.secondaryColor,
-                size: 24,
+              SizedBox(height: 16),
+              ProfileOption(action: ()=> context.push('/change-password'),
+                icone: Icon(
+                  Icons.password_outlined,
+                  color: AppColors.secondaryColor,
+                  size: 24,
+                ),
+                label: 'Alterar senha',
               ),
-              label: 'Alterar foto',
-            ),
-            SizedBox(height: 16),
-            ProfileOption(
-              labelColor: AppColors.red1,
-              action: () async {
-                await appState.logout();
-                await context.read<AuthRepository>().logout();
-              },
-              icone: Icon(
-                Icons.logout_rounded,
-                color: AppColors.red1,
-                size: 24,
+              SizedBox(height: 16),
+               ProfileOption(action: ()=> context.push('/policy'),
+                icone: Icon(
+                  Icons.document_scanner,
+                  color: AppColors.secondaryColor,
+                  size: 24,
+                ),
+                label: 'Termos de uso',
               ),
-              label: 'Sair',
-            ),
-          ]),
+              SizedBox(height: 16),
+              ProfileOption(
+                action: () async {
+                  widget.viewModel.alterarFoto(context);
+                },
+                icone: Icon(
+                  Icons.image,
+                  color: AppColors.secondaryColor,
+                  size: 24,
+                ),
+                label: 'Alterar foto',
+              ),
+              SizedBox(height: 16),
+              ProfileOption(
+                labelColor: AppColors.red1,
+                action: () async {
+                  await appState.logout();
+                  await context.read<AuthRepository>().logout();
+                },
+                icone: Icon(
+                  Icons.logout_rounded,
+                  color: AppColors.red1,
+                  size: 24,
+                ),
+                label: 'Sair',
+              ),
+            ]),
+          ),
         ),
       ),
     );

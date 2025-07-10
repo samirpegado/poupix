@@ -27,59 +27,61 @@ class _DonateState extends State<Donate> {
        
         body: Padding(
           padding: Dimens.of(context).edgeInsetsScreen,
-          child: Column(children: [
-            Image.asset(
-              'assets/poupix.png',
-              width: 200,
-            ),
-            SizedBox(height: 16),
-            SelectableText(
-              '''Este app é 100% gratuito e feito pra te ajudar a organizar seus gastos. 
-              \nSe ele te ajudou de alguma forma e você quiser apoiar o projeto, você pode me enviar um Pix:
-              \n💸 56.990.326/0001-68
-              \n56.990.326 SAMIR PEGADO GOMES''',
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 16),
-            FilledButton(
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: '56.990.326/0001-68'));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(
-                          'Chave pix copiada para a área de transferência!')),
-                );
-              },
-              style: ButtonStyle(
-                minimumSize: WidgetStateProperty.all(
-                  const Size.fromHeight(60),
-                ),
-                shape: WidgetStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: Dimens.borderRadius,
-                  ),
-                ),
-                elevation: WidgetStateProperty.all(2),
+          child: SingleChildScrollView(
+            child: Column(children: [
+              Image.asset(
+                'assets/poupix.png',
+                width: 200,
               ),
-              child: Text('Copiar chave pix'),
-            ),
-            SizedBox(height: 16),
-            OutlinedButton(
-              onPressed: () => context.go('/profile'),
-              style: ButtonStyle(
-                minimumSize: WidgetStateProperty.all(
-                  const Size.fromHeight(60),
-                ),
-                shape: WidgetStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: Dimens.borderRadius,
-                  ),
-                ),
-                elevation: WidgetStateProperty.all(2),
+              SizedBox(height: 16),
+              SelectableText(
+                '''Este app é 100% gratuito e feito pra te ajudar a organizar seus gastos. 
+                \nSe ele te ajudou de alguma forma e você quiser apoiar o projeto, você pode me enviar um Pix:
+                \n💸 56.990.326/0001-68
+                \n56.990.326 SAMIR PEGADO GOMES''',
+                textAlign: TextAlign.center,
               ),
-              child: Text('Voltar'),
-            )
-          ]),
+              SizedBox(height: 16),
+              FilledButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: '56.990.326/0001-68'));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'Chave pix copiada para a área de transferência!')),
+                  );
+                },
+                style: ButtonStyle(
+                  minimumSize: WidgetStateProperty.all(
+                    const Size.fromHeight(60),
+                  ),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: Dimens.borderRadius,
+                    ),
+                  ),
+                  elevation: WidgetStateProperty.all(2),
+                ),
+                child: Text('Copiar chave pix'),
+              ),
+              SizedBox(height: 16),
+              OutlinedButton(
+                onPressed: () => context.go('/profile'),
+                style: ButtonStyle(
+                  minimumSize: WidgetStateProperty.all(
+                    const Size.fromHeight(60),
+                  ),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: Dimens.borderRadius,
+                    ),
+                  ),
+                  elevation: WidgetStateProperty.all(2),
+                ),
+                child: Text('Voltar'),
+              )
+            ]),
+          ),
         ),
       ),
     );
