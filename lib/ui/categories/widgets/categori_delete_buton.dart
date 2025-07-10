@@ -46,17 +46,38 @@ class _CategoriaDeleteButtonState extends State<CategoriaDeleteButton> {
 
         await widget.viewModel.deleteCategoria.execute(widget.categoria.id);
 
+        if (mounted) {
+          final result = widget.viewModel.deleteCategoria.result;
+
+          if (result is Ok) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Categoria excluída com sucesso!')),
+            );
+            setState(() {
+          _isDeleting = false;
+        });
+            return Result.ok('Categoria excluída com sucesso!');
+            
+          } else if (result is Error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Erro: ${result.error}')),
+            );
+            setState(() {
+          _isDeleting = false;
+        });
+            return Result.error(Exception('Erro ao excluir categoria'));
+          }
+        }
+
         setState(() {
           _isDeleting = false;
         });
       }
-      String msg = 'Categoria excluida com sucesso';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(msg)),
-      );
-      return Result.ok(msg);
+
+      // ⛔ Caso o usuário cancele ou nada aconteça
+      return Result.error(Exception('Exclusão cancelada pelo usuário'));
     } catch (e) {
-      return Result.ok('Erro ao excluir cateoria');
+      return Result.error(Exception('Erro ao excluir categoria'));
     }
   }
 

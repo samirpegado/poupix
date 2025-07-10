@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:poupix/domain/models/categorias_model.dart';
+import 'package:poupix/domain/models/despesa.dart';
 import 'package:poupix/domain/models/despesas_mes.dart';
 import 'package:poupix/domain/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ class AppState extends ChangeNotifier {
   bool get overrideCategorias => _overrideCategorias;
   DateTime? get dataSelecionada => _dataSelecionada;
   XFile? get profilePic => _profilePic;
+  DespesaModel? despesaSelecionada;
 
   Future<void> carregar() async {
     final prefs = await SharedPreferences.getInstance();
@@ -71,6 +73,18 @@ class AppState extends ChangeNotifier {
 
     _overrideCache = overrideCache ?? true;
     _overrideCategorias = overrideCategorias ?? true;
+    notifyListeners();
+  }
+
+  
+
+  void selecionarDespesa(DespesaModel despesa) {
+    despesaSelecionada = despesa;
+    notifyListeners();
+  }
+
+  void limparDespesaSelecionada() {
+    despesaSelecionada = null;
     notifyListeners();
   }
 

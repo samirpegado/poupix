@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:poupix/app_state/app_state.dart';
 import 'package:poupix/ui/components/month_picker.dart';
@@ -156,7 +157,12 @@ class _ExpensesState extends State<Expenses> {
                                 final despesa = despesasFiltradas[index];
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 8),
-                                  child: ExpenseItem(despesa: despesa),
+                                  child: InkWell( 
+                                    onTap: () {
+                                      appState.selecionarDespesa(despesa) ;
+                                      context.push('/edit');
+                                    },
+                                    child: ExpenseItem(despesa: despesa)),
                                 );
                               },
                             ),

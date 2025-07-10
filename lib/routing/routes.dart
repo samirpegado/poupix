@@ -5,6 +5,7 @@ abstract final class Routes {
   static const loading = '/loading';
   static const expenses = '/expenses';
   static const add = '/add';
+  static const edit = '/edit';
   static const categories = '/categories';
   static const profile = '/profile';
   static const donate = '/donate';

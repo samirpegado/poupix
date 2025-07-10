@@ -6,35 +6,53 @@ import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:poupix/app_state/app_state.dart';
 import 'package:poupix/domain/models/categorias_model.dart';
-import 'package:poupix/ui/add/view_models/add_viewmodel.dart';
+import 'package:poupix/domain/models/despesa.dart';
 import 'package:poupix/ui/components/category_add.dart';
-import 'package:poupix/ui/components/navbar.dart';
 import 'package:poupix/ui/core/themes/colors.dart';
 import 'package:poupix/ui/core/themes/dimens.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
 import 'package:poupix/ui/core/ui/input_decorations.dart';
 import 'package:poupix/ui/core/ui/validators.dart';
+import 'package:poupix/ui/edit_expense/view_models/edit_viewmodel.dart';
+import 'package:poupix/utils/functions.dart';
 import 'package:poupix/utils/result.dart';
 import 'package:provider/provider.dart';
 
-class Add extends StatefulWidget {
-  const Add({super.key, required this.viewModel});
-  final AddViewModel viewModel;
+class EditExpense extends StatefulWidget {
+  const EditExpense({super.key, required this.viewModel});
+  final EditExpenseViewModel viewModel;
 
   @override
-  State<Add> createState() => _AddState();
+  State<EditExpense> createState() => _EditExpenseState();
 }
 
-class _AddState extends State<Add> {
-  final _formKey = GlobalKey<FormState>();
-  final _tituloController = TextEditingController();
-  final _descricaoController = TextEditingController();
-  final _valorController = TextEditingController();
-  final _vencimentoController = TextEditingController();
-  late final _qtdParcelasController = TextEditingController(text: '1');
+class _EditExpenseState extends State<EditExpense> {
+  late final _formKey = GlobalKey<FormState>();
+  late final _tituloController = TextEditingController();
+  late final _descricaoController = TextEditingController();
+  late final _valorController = TextEditingController();
+  late final _vencimentoController = TextEditingController();
+  late final _qtdParcelasController = TextEditingController();
   Categorias? selectedCategoria;
   String? tipo;
   int qtdParcelas = 1;
+  DespesaModel? despesa;
+
+  @override
+  void initState() {
+    despesa = widget.viewModel.appState.despesaSelecionada;
+    _tituloController.text = despesa?.titulo ?? '';
+    _descricaoController.text = despesa?.descricao ?? '';
+    _valorController.text = currencyFormat.format(despesa?.valor ?? 0.0);
+    _vencimentoController.text =
+        UtilData.obterDataDDMMAAAA(DateTime.parse(despesa?.vencimento ?? ''));
+    _qtdParcelasController.text = despesa?.parcelas.toString() ?? '1';
+    selectedCategoria = widget.viewModel.appState.categorias
+        ?.firstWhere((item) => item.titulo == despesa?.categoriaTitulo);
+    tipo = despesa?.tipo ?? '';
+
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -55,13 +73,17 @@ class _AddState extends State<Add> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Adicionar despesa',
+            'Editar despesa',
             style: AppTheme.lightTheme.textTheme.titleMedium,
           ),
+          leading: IconButton(
+            onPressed: () => context.go('/expenses'),
+            icon: Icon(
+              Icons.arrow_back_ios_rounded,
+              color: Colors.white,
+            ),
+          ),
           backgroundColor: AppColors.black1,
-        ),
-        bottomNavigationBar: const MyBottomNavBar(
-          route: '/add',
         ),
         body: Padding(
           padding: Dimens.of(context).edgeInsetsScreen,
@@ -109,7 +131,7 @@ class _AddState extends State<Add> {
                     validator: AppValidators.nome(),
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
-                      CentavosInputFormatter(moeda: false)
+                      CentavosInputFormatter(moeda: true)
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -206,6 +228,7 @@ class _AddState extends State<Add> {
                       Expanded(
                         child: DropdownButtonFormField2<String>(
                           isDense: true,
+                          value: tipo,
                           style: TextStyle(color: AppColors.black1),
                           dropdownStyleData: DropdownStyleData(maxHeight: 300),
                           decoration: AppInputDecorations.normal(
@@ -320,7 +343,86 @@ class _AddState extends State<Add> {
                             : const Text('Salvar'),
                       );
                     },
-                  )
+                  ),
+                  SizedBox(height: 16),
+
+                  ///Botão remover
+
+                  AnimatedBuilder(
+                    animation: widget.viewModel.deletarDespesa,
+                    builder: (context, _) {
+                      return FilledButton(
+                        style: ButtonStyle(
+                          minimumSize: WidgetStateProperty.all(
+                              const Size.fromHeight(60)),
+                          backgroundColor:
+                              WidgetStateProperty.all(AppColors.red1),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                                borderRadius: Dimens.borderRadius),
+                          ),
+                          elevation: WidgetStateProperty.all(2),
+                        ),
+                        onPressed: () async {
+                          final confirmado = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Confirmar exclusão'),
+                              content: const Text(
+                                  'Tem certeza que deseja excluir esta despesa? Essa ação não pode ser desfeita.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: const Text('Excluir',
+                                      style: TextStyle(color: Colors.red)),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (confirmado == true) {
+                            await widget.viewModel.deletarDespesa.execute();
+
+                            if (mounted) {
+                              final result =
+                                  widget.viewModel.deletarDespesa.result;
+
+                              if (result is Ok) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Despesa deletada com sucesso!')),
+                                );
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  context.go('/expenses');
+                                });
+                              } else if (result is Error) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('Erro: ${result.error}')),
+                                );
+                              }
+                            }
+                          }
+                        },
+                        child: widget.viewModel.deletarDespesa.running
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                    strokeWidth: 2.5, color: Colors.white),
+                              )
+                            : const Text('Deletar'),
+                      );
+                    },
+                  ),
                 ]),
           ),
         ),

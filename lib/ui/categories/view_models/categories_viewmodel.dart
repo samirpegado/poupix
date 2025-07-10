@@ -49,11 +49,14 @@ class CategoriesViewModel {
 
   Future<Result<String>> _removerCategoria(int categoriaId) async {
     try {
-      await Supabase.instance.client
+       await Supabase.instance.client
           .from('categorias')
           .delete()
           .eq('id', categoriaId);
+     
       await _buscarCategorias(force: true);
+
+
 
       return Result.ok('Categoria removida com sucesso');
     } catch (e) {
