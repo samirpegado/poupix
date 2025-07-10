@@ -1,4 +1,4 @@
-package com.example.poupix
+package com.sognolabs.poupix
 
 import io.flutter.embedding.android.FlutterActivity
 

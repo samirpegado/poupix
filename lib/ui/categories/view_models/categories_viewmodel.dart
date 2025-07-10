@@ -60,7 +60,7 @@ class CategoriesViewModel {
 
       return Result.ok('Categoria removida com sucesso');
     } catch (e) {
-      return Result.error(Exception('Erro ao remover categorias'));
+      return Result.error(Exception('Categorias em uso não podem ser removidas'));
     }
   }
 }

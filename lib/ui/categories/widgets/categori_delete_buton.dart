@@ -60,7 +60,7 @@ class _CategoriaDeleteButtonState extends State<CategoriaDeleteButton> {
             
           } else if (result is Error) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Erro: ${result.error}')),
+              SnackBar(content: Text('Categorias em uso não podem ser removidas')),
             );
             setState(() {
           _isDeleting = false;

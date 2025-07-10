@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:poupix/ui/core/themes/colors.dart';
 import 'package:poupix/ui/core/themes/dimens.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
@@ -21,7 +20,7 @@ class _PolicyState extends State<Policy> {
           style: AppTheme.lightTheme.textTheme.titleMedium,
         ),
         leading: IconButton(
-          onPressed: () => context.go('/signup'),
+          onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
             Icons.arrow_back_ios_rounded,
             color: Colors.white,

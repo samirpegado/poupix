@@ -26,58 +26,6 @@ class AppState extends ChangeNotifier {
   XFile? get profilePic => _profilePic;
   DespesaModel? despesaSelecionada;
 
-  Future<void> carregar() async {
-    final prefs = await SharedPreferences.getInstance();
-    final usuarioJson = prefs.getString('usuario');
-    final despesasJson = prefs.getString('despesasMes');
-    final overrideCache = prefs.getBool('overrideCache');
-    final overrideCategorias = prefs.getBool('overrideCategorias');
-    final dataSalva = prefs.getString('dataSelecionada');
-
-    if (usuarioJson != null) {
-      _usuario = UserModel.fromJson(jsonDecode(usuarioJson));
-    }
-
-    if (dataSalva == null) {
-      _dataSelecionada = DateTime.now();
-    } else {
-      _dataSelecionada = DateTime.parse(dataSalva);
-    }
-
-    try {
-      if (despesasJson != null) {
-        final decoded = jsonDecode(despesasJson);
-
-        if (decoded is Map<String, dynamic>) {
-          _despesasMes = DespesasMesModel.fromJson(decoded);
-        } else if (decoded is String) {
-          // Isso acontece se você salvou o JSON como string *duplamente* codificada
-          _despesasMes = DespesasMesModel.fromJson(jsonDecode(decoded));
-        } else {
-          throw Exception('Formato inválido para despesasMes');
-        }
-      }
-    } catch (e) {
-      debugPrint('Erro ao carregar despesasMes do cache: $e');
-    }
-    final categoriasJson = prefs.getString('categorias');
-
-    if (categoriasJson != null) {
-      try {
-        _categorias = Categorias.listFromJson(categoriasJson);
-      } catch (e) {
-        debugPrint('Erro ao carregar categorias do cache: $e');
-        _categorias = null;
-      }
-    }
-
-    _overrideCache = overrideCache ?? true;
-    _overrideCategorias = overrideCategorias ?? true;
-    notifyListeners();
-  }
-
-  
-
   void selecionarDespesa(DespesaModel despesa) {
     despesaSelecionada = despesa;
     notifyListeners();
@@ -160,6 +108,56 @@ class AppState extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('usuario', jsonEncode(_usuario!.toJson()));
+    notifyListeners();
+  }
+
+  Future<void> carregar() async {
+    final prefs = await SharedPreferences.getInstance();
+    final usuarioJson = prefs.getString('usuario');
+    final despesasJson = prefs.getString('despesasMes');
+    final overrideCache = prefs.getBool('overrideCache');
+    final overrideCategorias = prefs.getBool('overrideCategorias');
+    final dataSalva = prefs.getString('dataSelecionada');
+
+    if (usuarioJson != null) {
+      _usuario = UserModel.fromJson(jsonDecode(usuarioJson));
+    }
+
+    if (dataSalva == null) {
+      _dataSelecionada = DateTime.now();
+    } else {
+      _dataSelecionada = DateTime.parse(dataSalva);
+    }
+
+    try {
+      if (despesasJson != null) {
+        final decoded = jsonDecode(despesasJson);
+
+        if (decoded is Map<String, dynamic>) {
+          _despesasMes = DespesasMesModel.fromJson(decoded);
+        } else if (decoded is String) {
+          // Isso acontece se você salvou o JSON como string *duplamente* codificada
+          _despesasMes = DespesasMesModel.fromJson(jsonDecode(decoded));
+        } else {
+          throw Exception('Formato inválido para despesasMes');
+        }
+      }
+    } catch (e) {
+      debugPrint('Erro ao carregar despesasMes do cache: $e');
+    }
+    final categoriasJson = prefs.getString('categorias');
+
+    if (categoriasJson != null) {
+      try {
+        _categorias = Categorias.listFromJson(categoriasJson);
+      } catch (e) {
+        debugPrint('Erro ao carregar categorias do cache: $e');
+        _categorias = null;
+      }
+    }
+
+    _overrideCache = overrideCache ?? true;
+    _overrideCategorias = overrideCategorias ?? true;
     notifyListeners();
   }
 }

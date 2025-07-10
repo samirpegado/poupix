@@ -70,6 +70,7 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _nomeController,
+                    textCapitalization: TextCapitalization.words,
                     decoration: AppInputDecorations.normal(
                       label: 'Nome',
                       icon: Icons.person_outlined,

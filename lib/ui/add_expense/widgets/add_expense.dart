@@ -80,6 +80,7 @@ class _AddState extends State<Add> {
                   /// Titulo
                   TextFormField(
                     controller: _tituloController,
+                    textCapitalization: TextCapitalization.words,
                     decoration: AppInputDecorations.normal(
                       label: 'Título',
                       icon: Icons.subtitles_outlined,
@@ -91,6 +92,7 @@ class _AddState extends State<Add> {
                   /// Descricao
                   TextFormField(
                     controller: _descricaoController,
+                    textCapitalization: TextCapitalization.sentences,
                     decoration: AppInputDecorations.normal(
                       label: 'Descrição',
                       icon: Icons.description_outlined,

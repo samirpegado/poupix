@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.poupix"
+    namespace = "com.sognolabs.poupix"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 

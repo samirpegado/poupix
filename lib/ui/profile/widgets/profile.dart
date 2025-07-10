@@ -23,7 +23,6 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
-    final usuario = context.watch<AppState>().usuario;
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -42,7 +41,7 @@ class _ProfileState extends State<Profile> {
           child: Column(children: [
             ClipOval(
               child: Image.network(
-                usuario?.profilePic ??
+                appState.usuario?.profilePic ??
                     'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/contas-bq58qy/assets/b0smeq7opmcb/emptyUser_(1).png',
                 fit: BoxFit.cover,
                 width: 100,
@@ -101,6 +100,15 @@ class _ProfileState extends State<Profile> {
               label: 'Alterar senha',
             ),
             SizedBox(height: 16),
+             ProfileOption(action: ()=> context.push('/policy'),
+              icone: Icon(
+                Icons.document_scanner,
+                color: AppColors.secondaryColor,
+                size: 24,
+              ),
+              label: 'Termos de uso',
+            ),
+            SizedBox(height: 16),
             ProfileOption(
               action: () async {
                 widget.viewModel.alterarFoto(context);
@@ -116,7 +124,7 @@ class _ProfileState extends State<Profile> {
             ProfileOption(
               labelColor: AppColors.red1,
               action: () async {
-                await context.read<AppState>().logout();
+                await appState.logout();
                 await context.read<AuthRepository>().logout();
               },
               icone: Icon(

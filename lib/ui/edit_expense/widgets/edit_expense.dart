@@ -102,6 +102,7 @@ class _EditExpenseState extends State<EditExpense> {
                   /// Titulo
                   TextFormField(
                     controller: _tituloController,
+                    textCapitalization: TextCapitalization.words,
                     decoration: AppInputDecorations.normal(
                       label: 'Título',
                       icon: Icons.subtitles_outlined,
@@ -113,6 +114,7 @@ class _EditExpenseState extends State<EditExpense> {
                   /// Descricao
                   TextFormField(
                     controller: _descricaoController,
+                    textCapitalization: TextCapitalization.sentences,
                     decoration: AppInputDecorations.normal(
                       label: 'Descrição',
                       icon: Icons.description_outlined,
