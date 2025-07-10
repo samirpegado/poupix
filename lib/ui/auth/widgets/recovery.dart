@@ -84,7 +84,7 @@ class _RecoveryState extends State<Recovery> {
                                 ).showSnackBar(SnackBar(
                                     content: Text(result.value.message)));
 
-                                context.go(
+                                context.push(
                                     '/new-password?email=${_emailController.text}');
                               }
                             } else {

@@ -14,8 +14,8 @@ class NewPasswordViewModel {
   Future<Result<ResponseModel>> _newPassword(NewPasswordParams params) async {
     try {
       final result = await authService.resetPasswordMobile(
-        email: params.email,
-        otpCode: params.otpCode,
+        email: params.email.trim().toLowerCase(),
+        otpCode: params.otpCode.trim(),
         password: params.password,
         confirmPassword: params.confirmPassword,
       );

@@ -6,12 +6,14 @@ import 'package:poupix/data/repositories/storage_repository.dart';
 import 'package:poupix/data/services/auth_service.dart';
 import 'package:poupix/ui/add/view_models/add_viewmodel.dart';
 import 'package:poupix/ui/add/widgets/add_expense.dart';
+import 'package:poupix/ui/auth/view_models/change_password_viewmodel.dart';
 import 'package:poupix/ui/auth/view_models/loading_viewmodel.dart';
 import 'package:poupix/ui/auth/view_models/login_viewmodel.dart';
 import 'package:poupix/ui/auth/view_models/new_password_viewmodel.dart';
 import 'package:poupix/ui/auth/view_models/recovery_viewmodel.dart';
 import 'package:poupix/ui/auth/view_models/signup_viewmodel.dart';
 import 'package:poupix/ui/auth/view_models/verify_viewmodel.dart';
+import 'package:poupix/ui/auth/widgets/change_password.dart';
 import 'package:poupix/ui/auth/widgets/loading.dart';
 import 'package:poupix/ui/auth/widgets/login.dart';
 import 'package:poupix/ui/auth/widgets/new_password.dart';
@@ -83,6 +85,17 @@ GoRouter router(AuthRepository authRepository, AppState appState) => GoRouter(
               );
             },
           ),
+            GoRoute(
+            path: '/change-password',
+            pageBuilder: (context, state) {
+              final authService = AuthService();
+              final viewModel = ChangePasswordViewModel(authService: authService);
+              return buildPageWithTransition(
+                state: state,
+                child: ChangePassword(viewModel: viewModel),
+              );
+            },
+          ),
           GoRoute(
             path: '/expenses',
             redirect: (context, state) async {
@@ -104,7 +117,7 @@ GoRouter router(AuthRepository authRepository, AppState appState) => GoRouter(
               return null;
             },
             pageBuilder: (context, state) {
-              final viewModel = AddViewModel();
+              final viewModel = AddViewModel(appState: appState);
               return buildPageWithTransition(
                 state: state,
                 child: Add(viewModel: viewModel),

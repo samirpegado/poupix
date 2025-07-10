@@ -25,12 +25,13 @@ class ProfileViewModel extends ChangeNotifier {
     );
 
     // 🔥 Bust cache da URL da imagem
-    final bustedUrl = '${userData.profilePic}?v=${DateTime.now().millisecondsSinceEpoch}';
+    final bustedUrl =
+        '${userData.profilePic}?v=${DateTime.now().millisecondsSinceEpoch}';
 
     await appState.atualizarProfilePicUrl(bustedUrl);
 
-    // Se a UI estiver escutando esse ViewModel diretamente, isso aqui ajuda:
-    notifyListeners();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Imagem atualizada com sucesso')),
+    );
   }
 }
-

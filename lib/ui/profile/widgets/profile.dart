@@ -61,7 +61,7 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(height: 20),
             ProfileOption(
-              action: () => context.go('/donate'),
+              action: () => context.push('/donate'),
               icone: Icon(
                 Icons.coffee,
                 color: AppColors.secondaryText,
@@ -92,7 +92,7 @@ class _ProfileState extends State<Profile> {
               label: 'Gerir conta',
             ),
             SizedBox(height: 16),
-            ProfileOption(
+            ProfileOption(action: ()=> context.push('/change-password'),
               icone: Icon(
                 Icons.password_outlined,
                 color: AppColors.secondaryColor,

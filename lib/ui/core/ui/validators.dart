@@ -17,8 +17,8 @@ class AppValidators {
   static String? Function(String?) nome({String label = 'Nome'}) {
     return ValidationBuilder(requiredMessage: 'Campo obrigatório!',)
         .required('Informe o $label')
-        .minLength(3, '$label muito curto')
-        .maxLength(80, '$label muito curto')
+        .minLength(3, 'Min. 3 caracteres')
+        .maxLength(80, 'Máx. 80 caracteres')
         .build();
   }
    static String? Function(String?) celular({String label = 'Celular'}) {

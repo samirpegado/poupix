@@ -14,7 +14,7 @@ class RecoveryViewModel {
   Future<Result<ResponseModel>> _recovery(String email) async {
     try {
       final result = await authService.recoveryPasswordMobile(
-        email: email,
+        email: email.trim().toLowerCase(),
       );
       return Result.ok(result);
     } catch (e) {

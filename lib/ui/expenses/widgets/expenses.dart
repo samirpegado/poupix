@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:poupix/app_state/app_state.dart';
@@ -6,6 +7,7 @@ import 'package:poupix/ui/components/navbar.dart';
 import 'package:poupix/ui/core/themes/colors.dart';
 import 'package:poupix/ui/core/themes/dimens.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
+import 'package:poupix/ui/core/ui/input_decorations.dart';
 import 'package:poupix/ui/expenses/view_models/expenses_viewmodel.dart';
 import 'package:poupix/ui/expenses/widgets/expense_item.dart';
 import 'package:poupix/utils/result.dart';
@@ -107,29 +109,42 @@ class _ExpensesState extends State<Expenses> {
                       ],
                     ),
                     const SizedBox(height: 16),
+                    
                     if (categorias.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 16, left: 16, right: 16),
-                        child: DropdownButton<String>(
-                          value: viewModel.categoriaSelecionada,
-                          hint: Text('Filtrar por categoria',
-                              style: AppTheme.btnTextStyleBlack),
-                          isExpanded: true,
-                          items: categorias.map((categoria) {
-                            return DropdownMenuItem<String>(
-                              value: categoria,
-                              child: Text(categoria,
-                                  style: AppTheme.btnTextStyleBlack),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              viewModel.selecionarCategoria(value);
-                            });
-                          },
-                        ),
+                      DropdownButtonFormField2<String>(
+                      isDense: true,
+                      style: TextStyle(color: AppColors.black1),
+                      dropdownStyleData: DropdownStyleData(maxHeight: 600),
+                      decoration: AppInputDecorations.normal(
+                        label: 'Filtrar por categoria',
+                        icon: Icons.category_outlined,
                       ),
+                      isExpanded: true,
+                      items: categorias
+                          .map((categoria) => DropdownMenuItem<String>(
+                                value: categoria,
+                                child: Text(
+                                  categoria,
+                                  style: TextStyle(
+                                    color: AppColors.black1,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                             setState(() {
+                            viewModel.selecionarCategoria(value);
+                          });
+                          });
+                        }
+                      },
+                      validator: (value) =>
+                          value == null ? 'Selecione uma categoria' : null,
+                    ),
+                     const SizedBox(height: 16),
                     Expanded(
                       child: despesasFiltradas.isEmpty
                           ? const Center(

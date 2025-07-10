@@ -111,12 +111,7 @@ class AppState extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('despesasMes');
     await prefs.remove('overrideCache');
-    await prefs.remove('categorias');
-    await prefs.remove('overrideCategorias');
-    _despesasMes = null;
     _overrideCache = true;
-    _overrideCategorias = true;
-    _categorias = null;
     notifyListeners();
   }
 

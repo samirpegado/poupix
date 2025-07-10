@@ -12,4 +12,5 @@ abstract final class Routes {
   static const policy = '/policy';
   static const recovery = '/recovery';
   static const newPassword = '/new-password';
+  static const changePassword = '/change-password';
 }

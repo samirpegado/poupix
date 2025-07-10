@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
                 ),
                 SizedBox(height: 16),
                 InkWell(
-                  onTap: () => context.go('/recovery'),
+                  onTap: () => context.push('/recovery'),
                   child: Row(
                     children: [
                       Text(
@@ -78,7 +78,7 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    context.go('/signup');
+                    context.push('/signup');
                   },
                   child: Row(
                     children: [
