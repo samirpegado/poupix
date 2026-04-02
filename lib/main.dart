@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:poupix/app_state/app_state.dart';
 import 'package:poupix/data/repositories/auth_repository.dart';
+import 'package:poupix/environment.dart';
 import 'package:poupix/routing/router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -11,13 +11,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Carrega as variáveis de ambiente em assets/.env
-  await dotenv.load(fileName: 'assets/.env');
+
 
   // Inicializa o Supabase
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    url: supabaseUrl,
+    anonKey: anonKey,
   );
 
   runApp(
