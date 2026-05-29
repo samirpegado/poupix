@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:poupix/data/services/summary_notification_service.dart';
 import 'package:poupix/domain/models/categorias_model.dart';
 import 'package:poupix/domain/models/despesa.dart';
 import 'package:poupix/domain/models/despesas_mes.dart';
@@ -57,6 +58,13 @@ class AppState extends ChangeNotifier {
     await prefs.setBool('overrideCache', false);
     _overrideCache = false;
     notifyListeners();
+
+    SummaryNotificationService.instance.updateMonthlySummary(
+      mesReferencia: _dataSelecionada ?? DateTime.now(),
+      totalPendente: despesas.totalPendente,
+      qtdPendentes: despesas.despesas.where((d) => !d.liquidada).length,
+      qtdTotal: despesas.despesas.length,
+    );
   }
 
   Future<void> salvarCategorias(List<Categorias> categorias) async {
@@ -74,6 +82,14 @@ class AppState extends ChangeNotifier {
     await prefs.remove('despesasMes');
     await prefs.remove('overrideCache');
     _overrideCache = true;
+    notifyListeners();
+  }
+
+  Future<void> limparCacheCategorias() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('categorias');
+    await prefs.remove('overrideCategorias');
+    _overrideCategorias = true;
     notifyListeners();
   }
 

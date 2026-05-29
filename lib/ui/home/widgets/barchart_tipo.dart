@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poupix/domain/models/total_tipo.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
+import 'package:poupix/ui/core/ui/app_empty_state.dart';
 import 'package:poupix/utils/functions.dart';
 
 class SimpleHorizontalBarChart extends StatelessWidget {
@@ -30,7 +31,14 @@ class SimpleHorizontalBarChart extends StatelessWidget {
         ? totalTipo.map((e) => e.valor).reduce((a, b) => a > b ? a : b)
         : 1;
 
-    return totalTipo.isEmpty? Center(child: Text('Nenhum dado a ser exibido'),) : Column(
+    return totalTipo.isEmpty
+        ? const AppEmptyState(
+            compact: true,
+            icon: Icons.bar_chart_outlined,
+            title: 'Sem dados por tipo',
+            subtitle: 'Adicione despesas para ver o gráfico.',
+          )
+        : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: totalTipo.map((item) {
         final percentual = item.valor / maxValor;

@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:poupix/domain/models/total_categoria.dart';
+import 'package:poupix/ui/core/ui/app_empty_state.dart';
 import 'package:poupix/utils/functions.dart';
 
 class DoughnutsTotalCategoria extends StatefulWidget {
@@ -42,7 +43,14 @@ class _DoughnutsTotalCategoriaState extends State<DoughnutsTotalCategoria> {
 
     final total = top5.fold<double>(0.0, (sum, item) => sum + item.valor);
 
-    return widget.totalCategorias.isEmpty? Center(child: Text('Nenhum dado a ser exibido'),) : Column(
+    return widget.totalCategorias.isEmpty
+        ? const AppEmptyState(
+            compact: true,
+            icon: Icons.pie_chart_outline,
+            title: 'Sem dados por categoria',
+            subtitle: 'Adicione despesas para ver o gráfico.',
+          )
+        : Column(
       children: [
         SizedBox(
           width: 250,

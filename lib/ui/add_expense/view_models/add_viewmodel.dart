@@ -50,7 +50,7 @@ class AddViewModel extends ChangeNotifier {
 
       return Result.ok(null);
     } catch (e) {
-      return Result.error(Exception('Erro ao salvar despesa: $e'));
+      return Result.error(Exception('Não foi possível salvar a despesa.'));
     }
   }
 }

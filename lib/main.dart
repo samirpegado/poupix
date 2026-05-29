@@ -5,6 +5,7 @@ import 'package:poupix/environment.dart';
 import 'package:poupix/routing/router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:poupix/data/services/summary_notification_service.dart';
 import 'package:poupix/data/repositories/supabase_auth_repository.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,12 +13,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-
-  // Inicializa o Supabase
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: anonKey,
   );
+
+  await SummaryNotificationService.instance.init();
 
   runApp(
     // Cria o MultiProvider para fornecer os repositórios e o estado da aplicação
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      title: 'App',
+      title: 'Poupix',
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.system,
       routerConfig: router(authRepository, appState),

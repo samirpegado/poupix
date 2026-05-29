@@ -63,4 +63,9 @@ class CategoriesViewModel {
       return Result.error(Exception('Categorias em uso não podem ser removidas'));
     }
   }
+
+  Future<void> refresh() async {
+    await appState.limparCacheCategorias();
+    await fetchCategorias.execute();
+  }
 }

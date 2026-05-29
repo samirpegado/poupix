@@ -4,13 +4,14 @@ import 'package:poupix/app_state/app_state.dart';
 import 'package:poupix/data/repositories/despesas_repository.dart';
 import 'package:poupix/domain/models/despesa.dart';
 import 'package:poupix/domain/models/despesas_mes.dart';
+import 'package:poupix/ui/expenses/widgets/expense_filters_sheet.dart';
 import 'package:poupix/utils/command.dart';
 import 'package:poupix/utils/result.dart';
 
 class ExpensesViewModel {
   ExpensesViewModel({required this.appState}) {
     fetchDespesas = Command0<DespesasMesModel>(_buscarDespesas);
-    fetchDespesas.execute(); // executa automaticamente ao instanciar
+    fetchDespesas.execute();
   }
 
   final AppState appState;
@@ -19,31 +20,76 @@ class ExpensesViewModel {
   late final Command0<DespesasMesModel> fetchDespesas;
 
   String? categoriaSelecionada;
+  String? filtroLiquidada;
 
-  /// Retorna todas as despesas do mês selecionado
-  List<DespesaModel> get despesas =>
-      appState.despesasMes?.despesas ?? [];
+  List<DespesaModel> get despesas => appState.despesasMes?.despesas ?? [];
 
-  /// Retorna lista de categorias únicas + "Todas"
   List<String> get categorias =>
-      ['Todas'] + despesas.map((d) => d.categoriaTitulo).toSet().toList();
+      ['Todas', ...despesas.map((d) => d.categoriaTitulo).toSet()];
 
-  /// Retorna lista de despesas filtradas pela categoria (ou todas)
-  List<DespesaModel> get despesasFiltradas {
-    if (categoriaSelecionada == null || categoriaSelecionada == 'Todas') {
-      return despesas;
+  ExpenseFilters get filtrosAtivos => ExpenseFilters(
+        categoria: categoriaSelecionada,
+        situacao: filtroLiquidada,
+      );
+
+  bool get temFiltrosAtivos => filtrosAtivos.hasActiveFilters;
+
+  List<DespesaModel> get _baseFiltrada {
+    var lista = despesas;
+
+    if (categoriaSelecionada != null && categoriaSelecionada != 'Todas') {
+      lista = lista
+          .where((d) => d.categoriaTitulo == categoriaSelecionada)
+          .toList();
     }
-    return despesas
-        .where((d) => d.categoriaTitulo == categoriaSelecionada)
-        .toList();
+
+    if (filtroLiquidada == 'Liquidadas') {
+      lista = lista.where((d) => d.liquidada).toList();
+    } else if (filtroLiquidada == 'Pendentes') {
+      lista = lista.where((d) => !d.liquidada).toList();
+    }
+
+    return lista;
   }
 
-  /// Soma o total das despesas filtradas
-  double get total => despesasFiltradas.fold(0.0, (sum, item) => sum + item.valor);
+  List<DespesaModel> get despesasFiltradas => _baseFiltrada;
 
-  /// Atualiza a categoria e refaz o filtro
-  void selecionarCategoria(String? novaCategoria) {
-    categoriaSelecionada = novaCategoria;
+  double get total => _baseFiltrada.fold(0.0, (sum, item) => sum + item.valor);
+
+  double get totalLiquidado => _baseFiltrada
+      .where((d) => d.liquidada)
+      .fold(0.0, (sum, item) => sum + item.valor);
+
+  double get totalPendente => _baseFiltrada
+      .where((d) => !d.liquidada)
+      .fold(0.0, (sum, item) => sum + item.valor);
+
+  void aplicarFiltros(ExpenseFilters filtros) {
+    categoriaSelecionada = filtros.categoria;
+    filtroLiquidada = filtros.situacao;
+  }
+
+  void limparFiltros() {
+    categoriaSelecionada = null;
+    filtroLiquidada = null;
+  }
+
+  Future<Result<void>> alternarLiquidada(DespesaModel despesa) async {
+    try {
+      await despesasRepository.atualizarLiquidada(
+        despesaId: despesa.despesaId,
+        liquidada: !despesa.liquidada,
+        tipo: despesa.tipo,
+        userId: appState.usuario!.id,
+        mesReferencia: appState.dataSelecionada ?? DateTime.now(),
+      );
+      await appState.limparCacheDespesas();
+      await fetchDespesas.execute();
+      return Result.ok(null);
+    } catch (e) {
+      _logger.severe('Erro ao atualizar liquidada: $e');
+      return Result.error(Exception('Não foi possível atualizar a despesa.'));
+    }
   }
 
   Future<Result<DespesasMesModel>> _buscarDespesas() async {
@@ -54,13 +100,12 @@ class ExpensesViewModel {
       }
 
       if (appState.overrideCache == true) {
-        categoriaSelecionada = null;
         final model = await despesasRepository.buscarDespesasMes(
           userId: userId,
           pData: DateFormat('yyyy-MM-dd')
               .format(appState.dataSelecionada ?? DateTime.now()),
         );
-        appState.salvarDespesasMes(model);
+        await appState.salvarDespesasMes(model);
         return Result.ok(model);
       } else {
         final cached = appState.despesasMes;

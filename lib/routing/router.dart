@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poupix/app_state/app_state.dart';
 import 'package:poupix/data/repositories/auth_repository.dart';
-import 'package:poupix/data/repositories/storage_repository.dart';
 import 'package:poupix/data/services/auth_service.dart';
-import 'package:poupix/ui/add_expense/view_models/add_viewmodel.dart';
-import 'package:poupix/ui/add_expense/widgets/add_expense.dart';
 import 'package:poupix/ui/auth/view_models/change_password_viewmodel.dart';
 import 'package:poupix/ui/auth/view_models/loading_viewmodel.dart';
 import 'package:poupix/ui/auth/view_models/login_viewmodel.dart';
@@ -23,13 +20,10 @@ import 'package:poupix/ui/auth/widgets/signup.dart';
 import 'package:poupix/ui/auth/widgets/verify.dart';
 import 'package:poupix/ui/categories/view_models/categories_viewmodel.dart';
 import 'package:poupix/ui/categories/widgets/categories.dart';
-import 'package:poupix/ui/edit_expense/view_models/edit_viewmodel.dart';
-import 'package:poupix/ui/edit_expense/widgets/edit_expense.dart';
 import 'package:poupix/ui/expenses/view_models/expenses_viewmodel.dart';
 import 'package:poupix/ui/expenses/widgets/expenses.dart';
 import 'package:poupix/ui/home/view_models/home_viewmodel.dart';
 import 'package:poupix/ui/home/widgets/home.dart';
-import 'package:poupix/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:poupix/ui/profile/widgets/donate.dart';
 import 'package:poupix/ui/profile/widgets/profile.dart';
 import 'package:provider/provider.dart';
@@ -114,38 +108,6 @@ GoRouter router(AuthRepository authRepository, AppState appState) => GoRouter(
             },
           ),
           GoRoute(
-            path: '/add',
-            redirect: (context, state) async {
-              if (!await isLoggedIn(authRepository)) return '/login';
-              return null;
-            },
-            pageBuilder: (context, state) {
-              final viewModel = AddViewModel(appState: appState);
-              return buildPageWithTransition(
-                state: state,
-                child: Add(viewModel: viewModel),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/edit',
-            redirect: (context, state) async {
-              if (!await isLoggedIn(authRepository)) return '/login';
-              return null;
-            },
-            pageBuilder: (context, state) {
-              final viewModel = EditExpenseViewModel(appState: appState);
-
-              return buildPageWithTransition(
-                state: state,
-                child: EditExpense(
-                  viewModel: viewModel,
-          
-                ),
-              );
-            },
-          ),
-          GoRoute(
             path: '/categories',
             redirect: (context, state) async {
               if (!await isLoggedIn(authRepository)) return '/login';
@@ -166,13 +128,9 @@ GoRouter router(AuthRepository authRepository, AppState appState) => GoRouter(
               return null;
             },
             pageBuilder: (context, state) {
-              final storageRepository = StorageRepository();
-              final viewModel = ProfileViewModel(
-                  storageRepository: storageRepository,
-                  appState: context.read<AppState>());
               return buildPageWithTransition(
                 state: state,
-                child: Profile(viewModel: viewModel),
+                child: const Profile(),
               );
             },
           ),

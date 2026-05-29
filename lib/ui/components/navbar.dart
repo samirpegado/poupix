@@ -9,7 +9,6 @@ class MyBottomNavBar extends StatelessWidget {
   static final tabs = [
     '/home',
     '/expenses',
-    '/add',
     '/categories',
     '/profile',
   ];
@@ -19,7 +18,8 @@ class MyBottomNavBar extends StatelessWidget {
     int currentIndex = tabs.indexWhere((tab) => route.startsWith(tab));
     if (currentIndex == -1) currentIndex = 0;
 
-    return SizedBox(height: 70,
+    return SizedBox(
+      height: 70,
       child: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (index) {
@@ -28,19 +28,21 @@ class MyBottomNavBar extends StatelessWidget {
           }
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.receipt_rounded), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.category), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_rounded), label: 'Despesas'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.category), label: 'Categorias'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedFontSize: 11,
+        unselectedFontSize: 11,
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppColors.black1,
+        selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.secondaryColor,
       ),
     );
   }
 }
-

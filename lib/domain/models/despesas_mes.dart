@@ -38,6 +38,14 @@ class DespesasMesModel {
     );
   }
 
+  double get totalLiquidado => despesas
+      .where((d) => d.liquidada)
+      .fold(0.0, (sum, item) => sum + item.valor);
+
+  double get totalPendente => despesas
+      .where((d) => !d.liquidada)
+      .fold(0.0, (sum, item) => sum + item.valor);
+
   Map<String, dynamic> toMap() {
     return {
       'total': total,
