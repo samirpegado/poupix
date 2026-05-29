@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:poupix/app_state/app_state.dart';import 'package:poupix/data/repositories/auth_repository.dart';
+import 'package:poupix/app_state/app_state.dart';
+import 'package:poupix/data/repositories/auth_repository.dart';
 import 'package:poupix/data/services/summary_notification_service.dart';
 import 'package:poupix/ui/components/manage_account.dart';
 import 'package:poupix/ui/components/navbar.dart';
-import 'package:poupix/ui/components/user_avatar.dart';
 import 'package:poupix/ui/core/themes/colors.dart';
 import 'package:poupix/ui/core/themes/dimens.dart';
 import 'package:poupix/ui/core/themes/theme.dart';
@@ -45,8 +45,6 @@ class Profile extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    const UserAvatar(size: 88),
-                    const SizedBox(height: 14),
                     Text(
                       appState.usuario?.nome ?? 'Usuário',
                       style: AppTheme.lightTheme.textTheme.titleMedium,

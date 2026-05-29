@@ -37,7 +37,6 @@ class _HomeState extends State<Home> {
     final appState = context.watch<AppState>();
 
     return SafeArea(
-      top: false,
       child: Scaffold(
         backgroundColor: AppColors.background,
         bottomNavigationBar: const MyBottomNavBar(route: '/home'),
